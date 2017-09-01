@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	log "github.com/sirupsen/logrus"
+)
 
 func main() {
+	log.Debug("yey")
 	fmt.Println("this will work")
 }
