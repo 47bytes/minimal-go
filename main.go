@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	log "github.com/sirupsen/logrus"
+	log "github.com/47bytes/minimal-go/github.com/sirupsen/logrus"
 )
 
 func main() {
