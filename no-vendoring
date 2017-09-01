@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Reset in case getopts has been used previously in the shell.
+OPTIND=1 
+
+FIND=$(which find) || exit 1
+SED=$(which sed) || exit 1
+VENDOR_DIR_NAME="vendor"
+VENDOR_DIRS=""
+IMPORT_PATH=""
+FLATTEN=true
+
+function print_help() {
+    echo "$(basename "$0") -i [-h] [-v] [-f]"
+    echo
+    echo "where:"
+    echo "	-i set import path of this project. e.g.: dev.intern.cm-ag/my/project"
+    echo "	-h show this help message"
+    echo "	-v set path to vendor dir. Default ./vendor"
+}
+
+function flatten_vendor() {
+    mv $VENDOR_DIR_NAME/* ./ || print_error
+    rm -rf ./$VENDOR_DIR_NAME || print_error
+}
+
+function print_error() {
+    echo "An error occured during the last operation." && exit 1
+}
+
+function search_and_replace_import_paths() {
+    for file in $(find ./ -type f -iname "*.go"); do
+        sed_cmd="sed -i"
+        for dir in $VENDOR_DIRS; do
+            sed_cmd+=" -e s|$dir|$IMPORT_PATH/$dir|g"
+            #sed -i "s|$dir|$IMPORT_PATH/$dir|g" $file;
+        done
+        sed_cmd+=" $file"
+        $sed_cmd
+    done
+}
+
+function main(){
+    VENDOR_DIRS=$(ls ./$VENDOR_DIR_NAME)
+    flatten_vendor
+    search_and_replace_import_paths
+    exit
+}
+
+while getopts "hv:i:" opt; do
+    case "$opt" in
+    h)
+        print_help
+        exit 0
+        ;;
+    v)  VENDOR_DIR_NAME="$OPTARG"
+        VENDOR_DIRS=$(ls ./$VENDOR_DIR_NAME)
+        ;;
+    i)  IMPORT_PATH=$OPTARG
+        ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+[ "$1" = "--" ] && shift
+
+if [ -z "$IMPORT_PATH" ]; then
+    echo "missing option -i"
+    echo
+    print_help
+else
+    main
+fi
