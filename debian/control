@@ -1,0 +1,21 @@
+Source: minimal-go
+Section: devel
+Priority: extra
+Maintainer: Debian Go Packaging Team <pkg-go-maintainers@lists.alioth.debian.org>
+Uploaders: TODO <leo@stretch.localdomain>
+Build-Depends: debhelper (>= 10),
+               dh-golang,
+               golang-any
+Standards-Version: 3.9.8
+Homepage: https://github.com/47bytes/minimal-go
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-go/packages/minimal-go.git
+Vcs-Git: https://anonscm.debian.org/git/pkg-go/packages/minimal-go.git
+XS-Go-Import-Path: github.com/47bytes/minimal-go
+
+Package: minimal-go
+Architecture: any
+Built-Using: ${misc:Built-Using}
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: 
+ minimal-go
